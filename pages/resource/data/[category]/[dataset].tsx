@@ -121,7 +121,7 @@ object(expression: "master:") {
   // const data = await response.json();
   // const response = await fetch(endpoint, options);
 
-  fetch(endpoint, options)
+  await fetch(endpoint, options)
     .then(resp => resp.json())
     .then(data => {
       console.log(data.data.repository, 'data')
@@ -133,13 +133,14 @@ object(expression: "master:") {
           item.object.entries.map((obj: any, key: any) => {
             console.log(`${obj.name.split(' ').join('%20')}`)
             staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+            console.log(staticPaths)
           })
         }
       })
     })
 
 
-  // console.log('staticPaths', staticPaths)
+  console.warn('OUT STATIC', staticPaths)
   // console.log(data)
 
 
