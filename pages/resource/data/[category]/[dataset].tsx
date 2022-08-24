@@ -11,8 +11,6 @@ import { fileURLToPath } from 'url'
 
 const octokit = new Octokit({ auth: `${process.env.NEXT_PUBLIC_PAT}` })
 
-const auth = createTokenAuth(`${process.env.NEXT_PUBLIC_PAT}`)
-const { token }: any = async () => { await auth() }
 
 export async function getStaticPaths() {
 
