@@ -104,26 +104,42 @@ object(expression: "master:") {
     "body": JSON.stringify(graphqlQuery)
   };
 
-  const response = await fetch(endpoint, options);
+
+  // fetch(linkFetch)
+  //   .then(resp => resp.json())
+  //   .then(arr => {
+  //     that.setState({
+  //       images: arr
+  //     });
+  //   })
+  //   .then(() => {
+  //     this.test();
+  //   });
+
   const staticPaths: any = []
   let category = ''
   // const data = await response.json();
+  // const response = await fetch(endpoint, options);
 
-
-  await response.json().then((data: any) => {
-
-    data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
-      if (item.type == 'tree') {
-        category = item.name
-        item.object.entries.map((obj: any, key: any) => {
-          staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
-        })
-      }
+  fetch(endpoint, options)
+    .then(resp => resp.json())
+    .then(data => {
+      console.log(data.data.repository, 'data')
+      data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
+        console.log(item.type, 'TYPEOF')
+        if (item.type == 'tree') {
+          console.log('inside te', item.name)
+          category = item.name
+          item.object.entries.map((obj: any, key: any) => {
+            console.log(`${obj.name.split(' ').join('%20')}`)
+            staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+          })
+        }
+      })
     })
-  }
-  )
 
-  console.log(staticPaths)
+
+  // console.log('staticPaths', staticPaths)
   // console.log(data)
 
 
