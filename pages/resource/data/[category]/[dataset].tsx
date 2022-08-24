@@ -2,23 +2,16 @@ import type { NextPage } from 'next'
 import { useState } from 'react'
 import Link from 'next/link'
 import { Octokit } from '@octokit/core'
-import { graphql } from "@octokit/graphql"
 import { useRouter } from 'next/router'
 import Breadcrumbs from 'nextjs-breadcrumbs'
 import Layout from '../../../../components/Layout'
-import { fileURLToPath } from 'url'
 
 const octokit = new Octokit({ auth: `${process.env.NEXT_PUBLIC_PAT}` })
 
+
 export async function getStaticPaths() {
 
-  const graphql_token = `token ` + process.env.NEXT_PUBLIC_PAT
-  const graphqlWithAuth = graphql.defaults({
-    headers: {
-      authorization: graphql_token,
-    },
-  });
-  const { repository } = await graphqlWithAuth(`
+  const { repository } = await octokit.graphql(`
     {
   repository(name: "climatedata", owner: "okfnepal") {
     object(expression: "master:") {
@@ -48,9 +41,9 @@ export async function getStaticPaths() {
     }
   }
 }
-
-
-`)
+`,
+    { login: "octokit" }
+  )
 
   const staticPaths: any = []
   let category = ''
