@@ -147,7 +147,7 @@ object(expression: "master:") {
 
 
   return {
-    paths: staticPaths, //create pages at build time
+    paths: [], //create pages at build time
     fallback: 'blocking' //indicates the type of fallback
   }
 }
