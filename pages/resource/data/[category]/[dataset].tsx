@@ -53,6 +53,19 @@ export async function getStaticPaths() {
   //     }
   //   )
 
+
+  // console.log(data)
+
+
+  return {
+    paths: [], //create pages at build time
+    fallback: 'blocking' //indicates the type of fallback
+  }
+}
+
+export async function getStaticProps({ params }: any) {
+  const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${params.category}/${params.dataset.split(' ').join('%20')}?ref=master`)
+
   const ary = `
   {
 repository(name: "climatedata", owner: "okfnepal") {
@@ -141,22 +154,12 @@ object(expression: "master:") {
 
 
   console.warn('OUT STATIC', staticPaths)
-  // console.log(data)
-
-
-  return {
-    paths: staticPaths, //create pages at build time
-    fallback: 'blocking' //indicates the type of fallback
-  }
-}
-
-export async function getStaticProps({ params }: any) {
-  const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${params.category}/${params.dataset.split(' ').join('%20')}?ref=master`)
 
   return {
     props: {
       data: res,
-      query: params
+      query: params,
+      new: staticPaths
     },
   }
 }
@@ -172,6 +175,8 @@ const Res: NextPage = (props: any) => {
   for (let i = 0; i < Number(datal.toFixed()); i++) {
     pageArr.push(data.slice(i * 10, (i + 1) * 10))
   }
+
+  console.log(props.new)
 
   return (
     <Layout title='Resources'>
