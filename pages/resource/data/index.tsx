@@ -98,15 +98,16 @@ object(expression: "master:") {
                 }
             })
         })
+        .catch(e => console.log('Error in fetch', e))
 
 
-    console.warn('OUT STATIC', staticPaths)
+    // console.warn('OUT STATIC', staticPaths)
 
 
     return {
         props: {
             data: res,
-            query: staticPaths
+            // query: staticPaths
         },
     }
 }
@@ -123,7 +124,7 @@ const Resources: NextPage = (props: any) => {
     for (let i = 0; i < Number(datal.toFixed()); i++) {
         pageArr.push(data.slice(i * 10, (i + 1) * 10))
     }
-    console.log(props.query)
+    console.log(props)
     return (
         <Layout title='Resources'>
             <div className='max-w-7xl mx-auto px-8 my-10'>
