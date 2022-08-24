@@ -55,6 +55,8 @@ export async function getStaticPaths() {
   //       })
   //     }
   //   })
+  const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/`)
+  console.log(res)
 
 
 
