@@ -155,100 +155,11 @@ object(expression: "master:") {
 export async function getStaticProps({ params }: any) {
   const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${params.category}/${params.dataset.split(' ').join('%20')}?ref=master`)
 
-  const ary = `
-  {
-repository(name: "climatedata", owner: "okfnepal") {
-object(expression: "master:") {
-  ... on Tree {
-    entries {
-      name
-      path
-      object {
-        ... on Tree {
-          entries {
-            name
-            path
-            type
-            object {
-              ... on Tree {
-                entries {
-                  name
-                  path
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-}
-}
-  `
-
-  const endpoint = "https://api.github.com/graphql";
-  const headers = {
-    "content-type": "application/json",
-    "Authorization": `bearer ${process.env.NEXT_PUBLIC_PAT}`
-  };
-
-  const graphqlQuery = {
-    // "operationName": "viewer",
-    "query": ary,
-    "variables": ""
-  }
-
-
-  const options = {
-    "method": "POST",
-    "headers": headers,
-    "body": JSON.stringify(graphqlQuery)
-  };
-
-
-  // fetch(linkFetch)
-  //   .then(resp => resp.json())
-  //   .then(arr => {
-  //     that.setState({
-  //       images: arr
-  //     });
-  //   })
-  //   .then(() => {
-  //     this.test();
-  //   });
-
-  const staticPaths: any = []
-  let category = ''
-  // const data = await response.json();
-  // const response = await fetch(endpoint, options);
-
-  await fetch(endpoint, options)
-    .then(resp => resp.json())
-    .then(data => {
-      console.log(data.data.repository, 'data')
-      data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
-        console.log(item.type, 'TYPEOF')
-        if (item.type == 'tree') {
-          console.log('inside te', item.name)
-          category = item.name
-          item.object.entries.map((obj: any, key: any) => {
-            console.log(`${obj.name.split(' ').join('%20')}`)
-            staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
-            console.log(staticPaths)
-          })
-        }
-      })
-    })
-
-
-  console.warn('OUT STATIC', staticPaths)
-
   return {
     props: {
       data: res,
       query: params,
-      new: staticPaths
+      // new: staticPaths
     },
   }
 }
@@ -265,7 +176,7 @@ const Res: NextPage = (props: any) => {
     pageArr.push(data.slice(i * 10, (i + 1) * 10))
   }
 
-  console.log(props.new)
+  // console.log(props.new)
 
   return (
     <Layout title='Resources'>
