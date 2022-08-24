@@ -109,7 +109,8 @@ object(expression: "master:") {
 
   const staticPaths: any = []
   let category = ''
-  data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
+
+  await data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
     if (item.type == 'tree') {
       category = item.name
       item.object.entries.map((obj: any, key: any) => {
