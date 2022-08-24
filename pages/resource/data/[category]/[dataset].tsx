@@ -53,56 +53,56 @@ export async function getStaticPaths() {
   //     }
   //   )
 
-  const ary = `
-  {
-repository(name: "climatedata", owner: "okfnepal") {
-object(expression: "master:") {
-  ... on Tree {
-    entries {
-      name
-      path
-      object {
-        ... on Tree {
-          entries {
-            name
-            path
-            type
-            object {
-              ... on Tree {
-                entries {
-                  name
-                  path
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-}
-}
-  `
+  //   const ary = `
+  //   {
+  // repository(name: "climatedata", owner: "okfnepal") {
+  // object(expression: "master:") {
+  //   ... on Tree {
+  //     entries {
+  //       name
+  //       path
+  //       object {
+  //         ... on Tree {
+  //           entries {
+  //             name
+  //             path
+  //             type
+  //             object {
+  //               ... on Tree {
+  //                 entries {
+  //                   name
+  //                   path
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  // }
+  // }
+  //   `
 
-  const endpoint = "https://api.github.com/graphql";
-  const headers = {
-    "content-type": "application/json",
-    "Authorization": `bearer ${process.env.NEXT_PUBLIC_PAT}`
-  };
+  //   const endpoint = "https://api.github.com/graphql";
+  //   const headers = {
+  //     "content-type": "application/json",
+  //     "Authorization": `bearer ${process.env.NEXT_PUBLIC_PAT}`
+  //   };
 
-  const graphqlQuery = {
-    // "operationName": "viewer",
-    "query": ary,
-    "variables": ""
-  }
+  //   const graphqlQuery = {
+  //     // "operationName": "viewer",
+  //     "query": ary,
+  //     "variables": ""
+  //   }
 
 
-  const options = {
-    "method": "POST",
-    "headers": headers,
-    "body": JSON.stringify(graphqlQuery)
-  };
+  //   const options = {
+  //     "method": "POST",
+  //     "headers": headers,
+  //     "body": JSON.stringify(graphqlQuery)
+  //   };
 
 
   // fetch(linkFetch)
@@ -116,31 +116,31 @@ object(expression: "master:") {
   //     this.test();
   //   });
 
-  const staticPaths: any = []
-  let category = ''
+  // const staticPaths: any = []
+  // let category = ''
   // const data = await response.json();
   // const response = await fetch(endpoint, options);
 
-  await fetch(endpoint, options)
-    .then(resp => resp.json())
-    .then(data => {
-      console.log(data.data.repository, 'data')
-      data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
-        console.log(item.type, 'TYPEOF')
-        if (item.type == 'tree') {
-          console.log('inside te', item.name)
-          category = item.name
-          item.object.entries.map((obj: any, key: any) => {
-            console.log(`${obj.name.split(' ').join('%20')}`)
-            staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
-            console.log(staticPaths)
-          })
-        }
-      })
-    })
+  // await fetch(endpoint, options)
+  //   .then(resp => resp.json())
+  //   .then(data => {
+  //     console.log(data.data.repository, 'data')
+  //     data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
+  //       console.log(item.type, 'TYPEOF')
+  //       if (item.type == 'tree') {
+  //         console.log('inside te', item.name)
+  //         category = item.name
+  //         item.object.entries.map((obj: any, key: any) => {
+  //           console.log(`${obj.name.split(' ').join('%20')}`)
+  //           staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+  //           console.log(staticPaths)
+  //         })
+  //       }
+  //     })
+  //   })
 
 
-  console.warn('OUT STATIC', staticPaths)
+  // console.warn('OUT STATIC', staticPaths)
 
 
   // console.log(data)
