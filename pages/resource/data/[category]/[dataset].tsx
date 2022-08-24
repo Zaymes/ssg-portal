@@ -9,15 +9,15 @@ import Layout from '../../../../components/Layout'
 import { fileURLToPath } from 'url'
 
 const octokit = new Octokit({ auth: `${process.env.NEXT_PUBLIC_PAT}` })
-const graphql_token = `token ${process.env.NEXT_PUBLIC_PAT}`
-const graphqlWithAuth = graphql.defaults({
-  headers: {
-    authorization: graphql_token,
-  },
-});
 
 export async function getStaticPaths() {
 
+  const graphql_token = `token ` + process.env.NEXT_PUBLIC_PAT
+  const graphqlWithAuth = graphql.defaults({
+    headers: {
+      authorization: graphql_token,
+    },
+  });
   const { repository } = await graphqlWithAuth(`
     {
   repository(name: "climatedata", owner: "okfnepal") {
