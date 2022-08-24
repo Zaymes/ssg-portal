@@ -78,27 +78,43 @@ object(expression: "master:") {
 
     const staticPaths: any = []
     let category = ''
-    // const data = await response.json();
-    // const response = await fetch(endpoint, options);
+    const response = await fetch(endpoint, options);
+    const data = await response.json();
 
-    await fetch(endpoint, options)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log(data.data.repository, 'data')
-            data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
-                console.log(item.type, 'TYPEOF')
-                if (item.type == 'tree') {
-                    console.log('inside te', item.name)
-                    category = item.name
-                    item.object.entries.map((obj: any, key: any) => {
-                        console.log(`${obj.name.split(' ').join('%20')}`)
-                        staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
-                        console.log(staticPaths)
-                    })
-                }
-            })
-        })
-        .catch(e => console.log('Error in fetch', e))
+    // await fetch(endpoint, options)
+    //     .then(resp => resp.json())
+    //     .then(data => {
+    //         console.log(data.data.repository, 'data')
+    //         data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
+    //             console.log(item.type, 'TYPEOF')
+    //             if (item.type == 'tree') {
+    //                 console.log('inside te', item.name)
+    //                 category = item.name
+    //                 item.object.entries.map((obj: any, key: any) => {
+    //                     console.log(`${obj.name.split(' ').join('%20')}`)
+    //                     staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+    //                     console.log(staticPaths)
+    //                 })
+    //             }
+    //         })
+    //     })
+    //     .then()
+    //     .catch(e => console.log('Error in fetch', e))
+
+    //         console.log(data.data.repository, 'data')
+    // data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
+    //     console.log(item.type, 'TYPEOF')
+    //     if (item.type == 'tree') {
+    //         console.log('inside te', item.name)
+    //         category = item.name
+    //         item.object.entries.map((obj: any, key: any) => {
+    //             console.log(`${obj.name.split(' ').join('%20')}`)
+    //             staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+    //             console.log(staticPaths)
+    //         })
+    //     }
+    // })
+
 
 
     // console.warn('OUT STATIC', staticPaths)
@@ -107,7 +123,7 @@ object(expression: "master:") {
     return {
         props: {
             data: res,
-            // query: staticPaths
+            query: data
         },
     }
 }
@@ -132,7 +148,7 @@ const Resources: NextPage = (props: any) => {
                 <div className='flex space-x-10 '>
                     <div className='mt-8  w-60'>
                         <h3 className='py-2 mb-2 text-xl' >Data Topics</h3>
-                        {props.query[0].params.dataset}
+                        {/* {props.query[0].params.dataset} */}
 
                         {/* TODO: Manual Now need to change it */}
                         <div className='pr-8 rounded-lg'>
