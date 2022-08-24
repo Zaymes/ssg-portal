@@ -105,22 +105,26 @@ object(expression: "master:") {
   };
 
   const response = await fetch(endpoint, options);
-  const data = await response.json();
-
   const staticPaths: any = []
   let category = ''
+  // const data = await response.json();
 
-  await data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
-    if (item.type == 'tree') {
-      category = item.name
-      item.object.entries.map((obj: any, key: any) => {
-        staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
-      })
-    }
-  })
+
+  await response.json().then((data: any) => {
+
+    data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
+      if (item.type == 'tree') {
+        category = item.name
+        item.object.entries.map((obj: any, key: any) => {
+          staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+        })
+      }
+    })
+  }
+  )
 
   console.log(staticPaths)
-  console.log(data)
+  // console.log(data)
 
 
   return {
