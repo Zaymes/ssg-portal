@@ -14,27 +14,64 @@ const octokit = new Octokit({ auth: `${process.env.NEXT_PUBLIC_PAT}` })
 
 export async function getStaticPaths() {
 
-  const { repository } = await graphql(`
-    {
-  repository(name: "climatedata", owner: "okfnepal") {
-    object(expression: "master:") {
-      ... on Tree {
-        entries {
-          name
-          path
-          object {
-            ... on Tree {
-              entries {
-                name
-                path
-                type
-                object {
-                  ... on Tree {
-                    entries {
-                      name
-                      path
-                    }
-                  }
+
+  //   const { repository } = await graphql(`
+  //     {
+  //   repository(name: "climatedata", owner: "okfnepal") {
+  //     object(expression: "master:") {
+  //       ... on Tree {
+  //         entries {
+  //           name
+  //           path
+  //           object {
+  //             ... on Tree {
+  //               entries {
+  //                 name
+  //                 path
+  //                 type
+  //                 object {
+  //                   ... on Tree {
+  //                     entries {
+  //                       name
+  //                       path
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+  // `,
+  //     {
+  //       headers: {
+  //         authorization: `token ${process.env.NEXT_PUBLIC_PAT}`
+  //       }
+  //     }
+  //   )
+
+  const ary = `
+  {
+repository(name: "climatedata", owner: "okfnepal") {
+object(expression: "master:") {
+  ... on Tree {
+    entries {
+      name
+      path
+      object {
+        ... on Tree {
+          entries {
+            name
+            path
+            type
+            object {
+              ... on Tree {
+                entries {
+                  name
+                  path
                 }
               }
             }
@@ -44,17 +81,35 @@ export async function getStaticPaths() {
     }
   }
 }
-`,
-    {
-      headers: {
-        authorization: `token ${process.env.NEXT_PUBLIC_PAT}`
-      }
-    }
-  )
+}
+}
+  `
+
+  const endpoint = "https://api.github.com/graphql";
+  const headers = {
+    "content-type": "application/json",
+    "Authorization": `bearer ${process.env.NEXT_PUBLIC_PAT}`
+  };
+
+  const graphqlQuery = {
+    // "operationName": "viewer",
+    "query": ary,
+    "variables": ""
+  }
+
+
+  const options = {
+    "method": "POST",
+    "headers": headers,
+    "body": JSON.stringify(graphqlQuery)
+  };
+
+  const response = await fetch(endpoint, options);
+  const data = await response.json();
 
   const staticPaths: any = []
   let category = ''
-  repository.object.entries[0].object.entries.map((item: any, key: any) => {
+  data.data.repository.object.entries[0].object.entries.map((item: any, key: any) => {
     if (item.type == 'tree') {
       category = item.name
       item.object.entries.map((obj: any, key: any) => {
@@ -64,10 +119,11 @@ export async function getStaticPaths() {
   })
 
   console.log(staticPaths)
+  console.log(data)
 
 
   return {
-    paths: staticPaths, //create pages at build time
+    paths: [], //create pages at build time
     fallback: 'blocking' //indicates the type of fallback
   }
 }
