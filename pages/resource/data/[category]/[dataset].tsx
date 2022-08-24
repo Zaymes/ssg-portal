@@ -2,66 +2,74 @@ import type { NextPage } from 'next'
 import { useState } from 'react'
 import Link from 'next/link'
 import { Octokit } from '@octokit/core'
+import { graphql } from "@octokit/graphql"
+import { createTokenAuth } from "@octokit/auth-token"
 import { useRouter } from 'next/router'
 import Breadcrumbs from 'nextjs-breadcrumbs'
 import Layout from '../../../../components/Layout'
+import { fileURLToPath } from 'url'
 
 const octokit = new Octokit({ auth: `${process.env.NEXT_PUBLIC_PAT}` })
 
+const auth = createTokenAuth(`${process.env.NEXT_PUBLIC_PAT}`)
+const { token }: any = async () => { await auth() }
 
 export async function getStaticPaths() {
 
-  //   const { repository } = await octokit.graphql(`
-  //     {
-  //   repository(name: "climatedata", owner: "okfnepal") {
-  //     object(expression: "master:") {
-  //       ... on Tree {
-  //         entries {
-  //           name
-  //           path
-  //           object {
-  //             ... on Tree {
-  //               entries {
-  //                 name
-  //                 path
-  //                 type
-  //                 object {
-  //                   ... on Tree {
-  //                     entries {
-  //                       name
-  //                       path
-  //                     }
-  //                   }
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-  // `,
-  //     { login: "octokit" }
-  //   )
+  const { repository } = await graphql(`
+    {
+  repository(name: "climatedata", owner: "okfnepal") {
+    object(expression: "master:") {
+      ... on Tree {
+        entries {
+          name
+          path
+          object {
+            ... on Tree {
+              entries {
+                name
+                path
+                type
+                object {
+                  ... on Tree {
+                    entries {
+                      name
+                      path
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`,
+    {
+      headers: {
+        authorization: `token ${process.env.NEXT_PUBLIC_PAT}`
+      }
+    }
+  )
 
-  //   const staticPaths: any = []
-  //   let category = ''
-  //   repository.object.entries[0].object.entries.map((item: any, key: any) => {
-  //     if (item.type == 'tree') {
-  //       category = item.name
-  //       item.object.entries.map((obj: any, key: any) => {
-  //         staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
-  //       })
-  //     }
-  //   })
-  const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/`)
-  console.log(res)
+  const staticPaths: any = []
+  let category = ''
+  repository.object.entries[0].object.entries.map((item: any, key: any) => {
+    if (item.type == 'tree') {
+      category = item.name
+      item.object.entries.map((obj: any, key: any) => {
+        staticPaths.push({ params: { dataset: `${obj.name.split(' ').join('%20')}`, category: category } })
+      })
+    }
+  })
 
+  console.log(staticPaths)
 
 
   return {
-    paths: [], //create pages at build time
+    paths: staticPaths, //create pages at build time
     fallback: 'blocking' //indicates the type of fallback
   }
 }
