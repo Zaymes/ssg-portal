@@ -55,7 +55,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }: any) {
-  const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${params.category}/${params.dataset.split(' ').join('%20')}?ref=master`)
+  const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${params.category}/${params.dataset}?ref=master`)
 
   // const staticPaths: any = []
 
@@ -80,7 +80,7 @@ export async function getStaticProps({ params }: any) {
         item.data.map((items: any) => {
           // console.log('CATEGORY', items.path.split('/')[1])
           // console.log('NAME', items.name.split(' ').join('%20'))
-          staticPaths.push({ params: { dataset: `${items.name.split(' ').join('%20')}`, category: items.path.split('/')[1] } })
+          staticPaths.push({ params: { dataset: `${items.name}`, category: items.path.split('/')[1] } })
           // console.log('staticpath', staticPaths)
         })
       })
@@ -94,7 +94,7 @@ export async function getStaticProps({ params }: any) {
       item.data.map((items: any) => {
         // console.log('CATEGORY', items.path.split('/')[1])
         // console.log('NAME', items.name.split(' ').join('%20'))
-        staticPaths.push({ params: { dataset: `${items.name.split(' ').join('%20')}`, category: items.path.split('/')[1] } })
+        staticPaths.push({ params: { dataset: `${items.name}`, category: items.path.split('/')[1] } })
         // console.log('staticpath', staticPaths)
       })
     })
@@ -157,7 +157,7 @@ const Res: NextPage = (props: any) => {
             activeItemStyle={{ color: '#282a35', textDecoration: 'underline' }}
             transformLabel={(label: any) => {
               if (router.asPath.split('/').slice(-1).some(item => item === label)) {
-                return label.split("%20").join(' ')
+                return label.split("-").join(' ')
               } else {
                 return label + ' >'
               }
