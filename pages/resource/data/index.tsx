@@ -140,7 +140,7 @@ const Resources: NextPage = (props: any) => {
     for (let i = 0; i < Number(datal.toFixed()); i++) {
         pageArr.push(data.slice(i * 10, (i + 1) * 10))
     }
-    console.log('this', `bearer ${process.env.NEXT_PUBLIC_PAT}`)
+    console.log(props)
     return (
         <Layout title='Resources'>
             <div className='max-w-7xl mx-auto px-8 my-10'>
