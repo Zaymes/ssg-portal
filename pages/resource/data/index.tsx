@@ -48,7 +48,7 @@ object(expression: "master:") {
     const endpoint = "https://api.github.com/graphql";
     const headers = {
         "content-type": "application/json",
-        "Authorization": `bearer ${process.env.NEXT_PUBLIC_PAT}`
+        "Authorization": "bearer " + `${process.env.NEXT_PUBLIC_PAT}`
     };
 
     const graphqlQuery = {
