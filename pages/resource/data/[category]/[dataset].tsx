@@ -14,8 +14,6 @@ const octokit = new Octokit({ auth: `${process.env.NEXT_PUBLIC_PAT}` })
 
 export async function getStaticPaths() {
 
-  const staticPaths: any = []
-
   async function mandem() {
     const categories_name: any = []
     const response = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets`)
@@ -30,19 +28,28 @@ export async function getStaticPaths() {
 
   const madcity = await mandem()
 
-  Promise.all(madcity).then((response) => {
+  const stathicccc = await Promise.all(madcity).then((response) => {
+    const staticPaths: any = []
     response.map((item: any) => {
       item.data.map((items: any) => {
-        console.log('CATEGORY', items.path.split('/')[1])
-        console.log('NAME', items.name.split(' ').join('%20'))
+        // console.log('CATEGORY', items.path.split('/')[1])
+        // console.log('NAME', items.name.split(' ').join('%20'))
         staticPaths.push({ params: { dataset: `${items.name.split(' ').join('%20')}`, category: items.path.split('/')[1] } })
-        console.log('staticpath', staticPaths)
+        // console.log('staticpath', staticPaths)
       })
     })
-  })
-  console.log('STATICPATHS', staticPaths)
+    return staticPaths
+  }).then((data: any) => data)
+
+  // const allthepaths = await getPaths(madcity)
+
+  console.log('STATICPATHS', stathicccc)
+
+
+
+
   return {
-    paths: staticPaths, //create pages at build time
+    paths: stathicccc, //create pages at build time
     fallback: 'blocking' //indicates the type of fallback
   }
 }
