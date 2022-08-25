@@ -13,56 +13,7 @@ export async function getStaticProps() {
     const named = ['Temperature']
     const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${named}?ref=master`)
 
-    const ary = `
-  {
-query repository(name: "climatedata", owner: "okfnepal") {
-object(expression: "master:") {
-  ... on Tree {
-    entries {
-      name
-      path
-      object {
-        ... on Tree {
-          entries {
-            name
-            path
-            type
-            object {
-              ... on Tree {
-                entries {
-                  name
-                  path
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-}
-}
-  `
 
-    const endpoint = "https://api.github.com/graphql";
-    const headers = {
-        "content-type": "application/json",
-        "Authorization": "bearer " + `${process.env.NEXT_PUBLIC_PAT}`
-    };
-
-    const graphqlQuery = {
-        // "operationName": "viewer",
-        "query": ary,
-        "variables": ""
-    }
-
-
-    const options = {
-        "method": "POST",
-        "headers": headers,
-        "body": JSON.stringify(graphqlQuery)
-    };
 
 
     // fetch(linkFetch)
@@ -76,10 +27,6 @@ object(expression: "master:") {
     //     this.test();
     //   });
 
-    const staticPaths: any = []
-    let category = ''
-    const response = await fetch(endpoint, options);
-    const data = await response.json();
 
     // await fetch(endpoint, options)
     //     .then(resp => resp.json())
@@ -123,7 +70,7 @@ object(expression: "master:") {
     return {
         props: {
             data: res,
-            query: data
+            // query: data
         },
     }
 }
@@ -132,7 +79,7 @@ object(expression: "master:") {
 
 const Resources: NextPage = (props: any) => {
     const [data, setData] = useState(props.data.data)
-    console.log(data)
+    // console.log(data)
     const dataLen = data.length
     const datal = Number(dataLen / 10)
     const pageArr = []
@@ -140,7 +87,7 @@ const Resources: NextPage = (props: any) => {
     for (let i = 0; i < Number(datal.toFixed()); i++) {
         pageArr.push(data.slice(i * 10, (i + 1) * 10))
     }
-    console.log(props)
+    // console.log(props)
     return (
         <Layout title='Resources'>
             <div className='max-w-7xl mx-auto px-8 my-10'>

@@ -36,9 +36,11 @@ export async function getStaticPaths() {
         console.log('CATEGORY', items.path.split('/')[1])
         console.log('NAME', items.name.split(' ').join('%20'))
         staticPaths.push({ params: { dataset: `${items.name.split(' ').join('%20')}`, category: items.path.split('/')[1] } })
+        console.log('staticpath', staticPaths)
       })
     })
   })
+  console.log('STATICPATHS', staticPaths)
   return {
     paths: staticPaths, //create pages at build time
     fallback: 'blocking' //indicates the type of fallback
@@ -48,11 +50,59 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }: any) {
   const res = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${params.category}/${params.dataset.split(' ').join('%20')}?ref=master`)
 
+  // const staticPaths: any = []
+
+  async function mandem() {
+    const categories_name: any = []
+    const response = await octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets`)
+    response.data.map((item: any) => {
+      console.log(item.type)
+      if (item.type === 'dir') {
+        categories_name.push(octokit.request(`GET /repos/okfnepal/climatedata/contents/Datasets/${item.name}?ref=master`))
+      }
+    })
+    return categories_name
+  }
+
+  const madcity = await mandem()
+
+  async function getPaths(promises: any) {
+    const staticPaths: any = []
+    Promise.all(promises).then((response) => {
+      response.map((item: any) => {
+        item.data.map((items: any) => {
+          // console.log('CATEGORY', items.path.split('/')[1])
+          // console.log('NAME', items.name.split(' ').join('%20'))
+          staticPaths.push({ params: { dataset: `${items.name.split(' ').join('%20')}`, category: items.path.split('/')[1] } })
+          // console.log('staticpath', staticPaths)
+        })
+      })
+      return staticPaths
+    }).then((data: any) => console.log('DATA', data))
+  }
+
+  const stathicccc = await Promise.all(madcity).then((response) => {
+    const staticPaths: any = []
+    response.map((item: any) => {
+      item.data.map((items: any) => {
+        // console.log('CATEGORY', items.path.split('/')[1])
+        // console.log('NAME', items.name.split(' ').join('%20'))
+        staticPaths.push({ params: { dataset: `${items.name.split(' ').join('%20')}`, category: items.path.split('/')[1] } })
+        // console.log('staticpath', staticPaths)
+      })
+    })
+    return staticPaths
+  }).then((data: any) => data)
+
+  const allthepaths = await getPaths(madcity)
+
+  console.log('STATICPATHS', stathicccc)
+
   return {
     props: {
       data: res,
       query: params,
-      // new: staticPaths
+      // new: allthepaths
     },
   }
 }
@@ -69,7 +119,7 @@ const Res: NextPage = (props: any) => {
     pageArr.push(data.slice(i * 10, (i + 1) * 10))
   }
 
-  // console.log(props.new)
+  // console.log(props)
 
   return (
     <Layout title='Resources'>
