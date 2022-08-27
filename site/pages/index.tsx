@@ -15,12 +15,12 @@ const Home: NextPage = () => {
           </h2>
           <div className='max-w-fit mx-auto mt-8'>
             <Link href='/resource/data'>
-              <button className='mx-auto w-36 border-indigo-200 border-2 bg-neutral-900 text-white mr-4 py-2 px-3 rounded-lg hover:bg-neutral-700'>
+              <button className='mx-auto w-36 border-slate-600 border-2 bg-gray-900 hover:bg-slate-400 font-medium  mr-4 py-2 px-3 text-white hover:text-black'>
                 Explore
               </button>
             </Link>
             <Link href='https://github.com/okfnepal/climate'>
-              <button className='w-36 border-indigo-200 border-2 bg-white text-slate-800 py-2 px-3 rounded-lg hover:bg-neutral-100 hover:text-slate-500'>
+              <button className='w-36 border-slate-600 border-2 bg-white text-slate-800 font-medium py-2 px-3 hover:bg-gray-300 hover:text-slate-500'>
                 Get Involved
               </button>
             </Link>

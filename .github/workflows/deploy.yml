@@ -18,7 +18,12 @@ jobs:
       - name: Installing App
         run: npm ci
       - name: Building App
-        run: npm run build && npm run export && touch ./out/.nojekyll
+      - run: |
+          cd site
+          npm run install
+          npm run build
+          npm run export
+          touch ./out/.nojekyll
         env:
           NEXT_PUBLIC_PAT: "${{ secrets.NEXT_PUBLIC_PAT }}"
       - name: "Deploy"
