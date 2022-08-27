@@ -3,7 +3,7 @@
 # dependencies
 /site/node_modules
 /site/.pnp
-.pnp.js
+./site/pnp.js
 
 # testing
 site/coverage
