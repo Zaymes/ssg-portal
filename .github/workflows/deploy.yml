@@ -18,7 +18,7 @@ jobs:
       - name: Installing App
         run: npm ci
       - name: Building App
-      - run: |
+        run: |
           cd site
           npm run install
           npm run build
